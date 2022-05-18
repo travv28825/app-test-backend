@@ -1,14 +1,21 @@
 const Gateway = require('../models/Gateway');
 
+function ValidateIPaddress(ipaddress) {
+    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {
+        return (true)
+    }
+    return (false)
+}
+
 module.exports = {
-    getAll(req,res){
+    getAll(req, res) {
         Gateway.find({}, (err, data) => {
             if (err) res.json({ success: false, message: `Error: ${err}` })
 
             res.json({ success: true, data })
-        }) 
+        })
     },
-    getBySerial(req,res){
+    getBySerial(req, res) {
         const { serial } = req.params;
 
         Gateway.findOne({ serial }, (err, item) => {
@@ -22,29 +29,37 @@ module.exports = {
                 });
         });
     },
-    addOne(req,res){
+    addOne(req, res) {
         const { serial, human, ip, devices } = req.body;
-        let gateway = new Gateway()
-        gateway.serial = serial;
-        gateway.human = human;
-        gateway.ip = ip;
-        gateway.devices = devices
+        console.log('ip:', ValidateIPaddress(ip))
+        if (ValidateIPaddress(ip)) {
+            let gateway = new Gateway()
+            gateway.serial = serial;
+            gateway.human = human;
+            gateway.ip = ip;
+            gateway.devices = devices
 
-        gateway.save(err => {
-            if (err) {
-                res.json({
-                    success: false,
-                    message: err,
+            gateway.save(err => {
+                if (err) {
+                    res.json({
+                        success: false,
+                        message: err,
+                    });
+                }
+
+                console.log('gateway saved')
+                res.send({
+                    success: true,
+                    message: "Gateway saved",
                 });
-            }
+            })
+        } else {
+            res.json({ ipaddress: 'fail', message: "Invalid IP address" })
+        }
 
-            res.send({
-                success: true,
-                message: "Gateway saved",
-            });
-        })
+
     },
-    updateOne(req,res){
+    updateOne(req, res) {
         const { serial } = req.params;
 
         Gateway.updateOne({ serial })
@@ -56,9 +71,9 @@ module.exports = {
                 res.send({ success: false, error: `Error: ${err}` });
             });
     },
-    deleteOne(req,res){
+    deleteOne(req, res) {
         const { serial } = req.params;
-        
+
         Character.deleteOne({ serial }, (err) => {
             if (err) res.send({ success: false, error: `Error: ${err}` });
 

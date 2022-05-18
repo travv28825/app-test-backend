@@ -1,14 +1,14 @@
 const Device = require('../models/Device');
 
 module.exports = {
-    getAll(req,res){
+    getAll(req, res) {
         Device.find({}, (err, data) => {
             if (err) res.json({ success: false, message: `Error: ${err}` })
 
             res.json({ success: true, data })
-        }) 
+        })
     },
-    getByUid(req,res){
+    getByUid(req, res) {
         const { uid } = req.params;
 
         Device.findOne({ uid }, (err, item) => {
@@ -22,12 +22,13 @@ module.exports = {
                 });
         });
     },
-    addOne(req,res){
-        const { uid, vendor, created, status } = req.body;
+    addOne(req, res) {
+        console.log('***********    ', req.body)
+        const { uid, vendor, date, status } = req.body;
         let device = new Device()
-        device.uid = uid;
+        device.uid = Number(uid);
         device.vendor = vendor;
-        device.created = created;
+        device.created = date;
         device.status = status
 
         device.save(err => {
@@ -44,7 +45,7 @@ module.exports = {
             });
         })
     },
-    updateOne(req,res){
+    updateOne(req, res) {
         const { uid } = req.params;
 
         Device.updateOne({ uid })
@@ -56,9 +57,9 @@ module.exports = {
                 res.send({ success: false, error: `Error: ${err}` });
             });
     },
-    deleteOne(req,res){
+    deleteOne(req, res) {
         const { uid } = req.params;
-        
+
         Character.deleteOne({ uid }, (err) => {
             if (err) res.send({ success: false, error: `Error: ${err}` });
 
