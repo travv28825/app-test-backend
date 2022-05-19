@@ -3,19 +3,19 @@ const mongoose = require('mongoose');
 const GatewaySchema = mongoose.Schema({
     serial: {
         type: String,
-        // required: true
+        required: true,
+        unique: true
     },
     human: {
         type: String,
-        // required: true
+        required: true
     },
     ip: {
         type: String,
-        // required: true
+        required: true
     },
     devices:{
-        type: Array,
-        // required: true
+        type: Array
     },
 });
 

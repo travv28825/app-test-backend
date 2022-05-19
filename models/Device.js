@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const DeviceSchema = mongoose.Schema({
     uid: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     vendor: {
         type: String,

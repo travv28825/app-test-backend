@@ -9,7 +9,7 @@ router
     .get('/gateway', gatewayController.getAll)
     .get('/gateway/:serial', gatewayController.getBySerial)
     .post('/gateway', gatewayController.addOne)
-    .put('/gateway/:serial', gatewayController.updateOne)
+    .put('/gateway', gatewayController.updateOne)
     .delete('/gateway/:serial', gatewayController.deleteOne)
     
     // device router
