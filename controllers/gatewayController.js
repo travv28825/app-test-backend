@@ -12,7 +12,7 @@ module.exports = {
         Gateway.find({}, (err, data) => {
             if (err) res.send({ success: false, message: `Error: ${err}` })
 
-            res.send({ success: true, data })
+            return res.send({ success: true, data })
         })
     },
     getBySerial(req, res) {
@@ -21,7 +21,7 @@ module.exports = {
         Gateway.findOne({ serial }, (err, item) => {
             if (err) res.send({ success: false, message: `Error: ${err}` })
 
-            item === null
+            return item === null
                 ? res.send({ success: false, message: "Gateway not found" })
                 : res.send({
                     success: true,
@@ -74,19 +74,19 @@ module.exports = {
         const item = req.body;
         Gateway.updateOne({ serial: item.serial }, item)
             .then((resp) => {
-                console.log('resp-UpdateOne:', resp)
-                res.send({ success: true, message: "Gateway updated" });
+                return res.send({ success: true, message: "Gateway updated" });
             })
             .catch((err) => {
-                res.send({ success: false, error: `Error: ${err}` });
+                return res.send({ success: false, error: `Error: ${err}` });
             });
     },
     deleteOne(req, res) {
         const { serial } = req.params;
-        console.log('eliminar::: ', serial)
+
         Gateway.deleteOne({ serial }, (err) => {
             if (err) res.send({ success: false, error: `Error: ${err}` });
-            res.send({ success: true, message: "Gateway deleted" });
+            
+            return res.send({ success: true, message: "Gateway deleted" });
         });
     }
 }

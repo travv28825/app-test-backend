@@ -16,7 +16,7 @@ router
     .get('/device', deviceController.getAll)
     .get('/device/:uid', deviceController.getByUid)
     .post('/device', deviceController.addOne)
-    .put('/device/:uid', deviceController.updateOne)
+    .put('/device', deviceController.updateOne)
     .delete('/device/:uid', deviceController.deleteOne)
 
 module.exports = router;
