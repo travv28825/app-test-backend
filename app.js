@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const port = 5200;
+const port = 5300;
 const index_router = require('./routes')
 
 //db
@@ -28,3 +28,5 @@ app.listen(port, () => {
     `\x1b[34m App running on port:\x1b[37m===>\x1b[33m [${port}]`
   );
 });
+
+module.exports = app;

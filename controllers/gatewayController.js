@@ -9,84 +9,66 @@ function ValidateIPaddress(ipaddress) {
 
 module.exports = {
     getAll(req, res) {
-        Gateway.find({}, (err, data) => {
-            if (err) res.send({ success: false, message: `Error: ${err}` })
+        let query = Gateway.find({})
+        query.exec((err, gateways) => {
+            if (err) res.status(500).send(err)
 
-            return res.send({ success: true, data })
+            res.status(200).json(gateways)
         })
     },
     getBySerial(req, res) {
-        const { serial } = req.params;
+        Gateway.findOne({ serial: req.params.serial }, (err, gateway) => {
+            if (err) res.status(500).send(err)
 
-        Gateway.findOne({ serial }, (err, item) => {
-            if (err) res.send({ success: false, message: `Error: ${err}` })
-
-            return item === null
-                ? res.send({ success: false, message: "Gateway not found" })
-                : res.send({
-                    success: true,
-                    data: item,
-                    message: `Gateway whith serial number:${serial}`
-                });
+            res.status(200).json(gateway);
         });
     },
     addOne(req, res) {
-        const { serial, human, ip, devices } = req.body;
+        const newGateway = new Gateway(req.body)
+        const { ip, devices } = newGateway
 
         if (ValidateIPaddress(ip)) {
             if (devices && devices.length > 10) {
-                res.send({ devices: 'fail', message: "A gateway can only have less than 10 devices" })
+                res.send({ devices: 'fail', message: "A gateway can only have less than 10 or less devices!" })
             } else {
-                let gateway = new Gateway()
-                gateway.serial = serial;
-                gateway.human = human;
-                gateway.ip = ip;
-                gateway.devices = devices
-
-                gateway.save(err => {
+                newGateway.save((err, gateway) => {
                     if (err) {
                         if (err.code == 11000)
                             return res.json({
-                                success: false,
                                 message: "A gateway with that serial number already exists. ",
                             });
 
-                        return res.send({
-                            success: false,
-                            message: err,
-                        });
+                        return res.status(500).send(err);
                     }
 
-                    console.log('gateway saved')
-                    return res.send({
-                        success: true,
-                        message: "Gateway saved",
+                    return res.status(200).send({
+                        message: "Gateway successfully added!",
+                        gateway
                     });
                 })
             }
         } else {
-            res.send({ ipaddress: 'fail', message: "Invalid IP address" })
+            res.send({ ipaddress: 'fail', message: "Invalid IP address!" })
         }
 
 
     },
     updateOne(req, res) {
-        const item = req.body;
-        Gateway.updateOne({ serial: item.serial }, item)
-            .then((resp) => {
-                return res.send({ success: true, message: "Gateway updated" });
-            })
-            .catch((err) => {
-                return res.send({ success: false, error: `Error: ${err}` });
-            });
+        Gateway.updateOne({ serial: req.params.serial }, req.body).then(response => {
+            if (response.n === 0) res.json({ message: 'Gateway not found!', response });
+
+            res.status(200).json({ message: 'Gateway updated!', response });
+        }).catch(err => {
+            res.status(500).send(err)
+        })
     },
     deleteOne(req, res) {
         const { serial } = req.params;
+        Gateway.deleteOne({ serial }, (err, response) => {
+            if (err) res.status(500).send(err);
+            if (response.result.n === 0) return res.status(200).send({ message: 'Gateway not found!', response })
 
-        Gateway.deleteOne({ serial }, (err) => {
-            if (err) res.send({ success: false, error: `Error: ${err}` });
-            
-            return res.send({ success: true, message: "Gateway deleted" });
+            res.status(200).json({ message: "Gateway successfully deleted!", response });
         });
     }
 }
