@@ -10,13 +10,19 @@ const DeviceSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    created: {
-        type: Date,
-        required: true
-    },
+    created: { type: Date, default: Date.now },
     status: {
         type: String,
         required: true
     }
 });
-module.exports = mongoose.model('User', DeviceSchema);
+
+DeviceSchema.pre('save', next => {
+    now = new Date();
+    if (!this.created) {
+        this.created = now;
+    }
+    next();
+});
+
+module.exports = mongoose.model('Device', DeviceSchema);
