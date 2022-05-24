@@ -17,12 +17,4 @@ const DeviceSchema = mongoose.Schema({
     }
 });
 
-DeviceSchema.pre('save', next => {
-    now = new Date();
-    if (!this.created) {
-        this.created = now;
-    }
-    next();
-});
-
 module.exports = mongoose.model('Device', DeviceSchema);
