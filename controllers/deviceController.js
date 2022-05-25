@@ -1,27 +1,36 @@
 const Device = require('../models/Device');
 const Gateway = require('../models/Gateway');
 
-module.exports = {
-  getAll(_, res) {
-    Device.find({}, (err, data) =>
-      err ? res.status(500).send(err) : res.status(200).json(data)
-    );
-  },
-  getByUid(req, res) {
-    try {
-      const { uid } = req.params;
-      if (validateUID(uid)) {
-        Device.findOne({ uid }, (err, item) =>
-          err ? res.status(500).send(err) : res.status(200).json(item)
-        );
-      } else {
-        res.status(401).send({ message: 'Invalid UID' });
-      }
-    } catch (error) {
-      // TODO: Add error logger
-      res.status(500).send(error);
+// TODO: Add security validation
+function validateUID(uid) {
+  return typeof uid === Number ? true : false;
+}
+
+function getAll(_, res) {
+  Device.find({}, (err, data) =>
+    err ? res.status(500).send(err) : res.status(200).json(data)
+  );
+}
+
+function getByUid(req, res) {
+  try {
+    const { uid } = req.params;
+    if (validateUID(uid)) {
+      Device.findOne({ uid }, (err, item) =>
+        err ? res.status(500).send(err) : res.status(200).json(item)
+      );
+    } else {
+      res.status(401).send({ message: 'Invalid UID' });
     }
-  },
+  } catch (error) {
+    // TODO: Add error logger
+    res.status(500).send(error);
+  }
+}
+
+module.exports = {
+  getAll,
+  getByUid,
   addOne(req, res) {
     const { uid, vendor, date, status } = req.body;
     let newDevice = new Device();
@@ -108,7 +117,3 @@ module.exports = {
     }
   },
 };
-// TODO: Add security validation
-function validateUID(uid) {
-  return typeof uid === Number ? true : false;
-}
