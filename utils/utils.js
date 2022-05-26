@@ -1,5 +1,3 @@
-const { param } = require('../routes');
-
 function findGateway(data) {
   for (const gateway of data) {
     for (const device of gateway.devices) {
@@ -27,10 +25,10 @@ function validUID(params) {
 
 function validSerial(params) {
   const { serial } = params;
-
   // TODO: add security validation
   if (serial) {
     const serialToNumber = Number(serial);
+
     return serialToNumber;
   }
 

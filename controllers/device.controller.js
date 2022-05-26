@@ -1,12 +1,11 @@
-const Device = require('../models/Device');
-const Gateway = require('../models/Gateway');
-
-const { validUID, findGateway } = require('../Utils/utils');
+// TODO: lint with eslint + prettier
+const { Device, Gateway } = require('../models');
 const {
   DB_ERROR_CODES,
   DB_UPDATE_STATUS,
   DB_DELETE_STATUS,
-} = require('../Utils/constants');
+} = require('../utils/constants');
+const { validUID, findGateway } = require('../utils/utils');
 
 function getAll(_, res) {
   Device.find({}, (error, data) =>

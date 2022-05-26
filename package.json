@@ -4,6 +4,8 @@
   "description": "app REST",
   "main": "app.js",
   "scripts": {
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
     "test": "mocha --timeout 10000",
     "start": "nodemon app"
   },
@@ -19,6 +21,10 @@
   },
   "author": "Asney Hidalgo",
   "devDependencies": {
-    "nodemon": "^2.0.16"
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2"
   }
 }

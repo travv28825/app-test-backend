@@ -1,15 +1,13 @@
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
-let mongoose = require('mongoose');
-let Device = require('../models/Device');
+const Device = require('../models/device.model');
 
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
 let server = require('../app');
-const req = require('express/lib/request');
-let should = chai.should();
 
 chai.use(chaiHttp);
 describe('******* Devices *******', () => {
@@ -19,7 +17,7 @@ describe('******* Devices *******', () => {
       done();
     });
   });
-  // GET /api/device
+
   describe('[GET]    /api/device', () => {
     it('it should GET all the Devices', (done) => {
       chai
@@ -33,7 +31,7 @@ describe('******* Devices *******', () => {
         });
     });
   });
-  // GET /api/device/:uid
+
   describe('[GET]    /api/device/:uid', () => {
     it('GET a device by the given uid', (done) => {
       let device = new Device({
@@ -59,7 +57,7 @@ describe('******* Devices *******', () => {
       });
     });
   });
-  // POST /api/device
+
   describe('[POST]   /api/device', () => {
     it('add a device', (done) => {
       let device = {
@@ -87,7 +85,7 @@ describe('******* Devices *******', () => {
 
     // faltan pruebas para el caso de agregar con uid existente
   });
-  // PUT /api/device/:uid
+
   describe('[PUT]    /api/device/:uid', () => {
     it('UPDATE a device', (done) => {
       let device = new Device({
@@ -134,7 +132,7 @@ describe('******* Devices *******', () => {
         });
     });
   });
-  // DELETE /api/device/:uid
+
   describe('[DELETE] /api/device/:uid', () => {
     it('DELETE a device', (done) => {
       let device = new Device({

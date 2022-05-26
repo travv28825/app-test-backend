@@ -1,17 +1,12 @@
-//During the test the env variable is set to test
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+
+const { Gateway } = require('../models');
+const server = require('../app');
+
 process.env.NODE_ENV = 'test';
-
-let mongoose = require('mongoose');
-let Gateway = require('../models/Gateway');
-
-//Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../app');
-const req = require('express/lib/request');
-let should = chai.should();
-
 chai.use(chaiHttp);
+
 describe('******* Gateways *******', () => {
   beforeEach((done) => {
     //Before each test we empty the database
@@ -40,12 +35,13 @@ describe('******* Gateways *******', () => {
         ip: '1.1.1.1',
         devices: [],
       });
-      gateway.save((err, gateway) => {
+
+      gateway.save((_, gateway) => {
         chai
           .request(server)
           .get(`/api/gateway/${gateway.serial}`)
           .send(gateway)
-          .end((err, res) => {
+          .end((_, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
             res.body.should.have.property('serial').eql(gateway.serial);
@@ -60,12 +56,13 @@ describe('******* Gateways *******', () => {
   // POST /api/gateway
   describe('[POST]   /api/gateway', () => {
     it('add a gateway', (done) => {
-      let gateway = {
+      const gateway = {
         serial: 123,
         human: 'J.R.R. Tolkien',
         ip: '1.1.1.1',
         devices: [],
       };
+
       chai
         .request(server)
         .post('/api/gateway')
@@ -122,7 +119,7 @@ describe('******* Gateways *******', () => {
         });
     });
     it('add a gateway with more than 10 devices', (done) => {
-      let gateway = {
+      const gateway = {
         serial: 123,
         human: 'J.R.R. Tolkien',
         ip: '1.1.1.3',
