@@ -1,7 +1,7 @@
-function findGateway(data) {
-  for (const gateway of data) {
+function findGateway(gateways, uid) {
+  for (const gateway of gateways) {
     for (const device of gateway.devices) {
-      if (device.uid === Number(uid)) {
+      if (device.uid === uid) {
         return gateway.serial;
       }
     }
@@ -17,6 +17,7 @@ function validUID(params) {
   // TODO: add security validation
   if (uid) {
     const uidToNumber = Number(uid);
+
     return uidToNumber;
   }
 

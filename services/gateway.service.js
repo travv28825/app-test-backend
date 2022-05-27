@@ -21,12 +21,12 @@ async function addOne(data) {
   const newGateway = new Gateway();
   const { serial, human, ip, devices } = data;
 
-  newGateway.serial = serial;
-  newGateway.human = human;
-  newGateway.ip = ip;
-  newGateway.devices = devices;
-
   try {
+    newGateway.serial = serial;
+    newGateway.human = human;
+    newGateway.ip = ip;
+    newGateway.devices = devices;
+
     const saveResponse = await newGateway.save();
 
     return {
@@ -39,7 +39,7 @@ async function addOne(data) {
     if (isDuplicate) {
       return { message: 'A gateway with that serial number already exists.' };
     } else {
-      return error;
+      return { message: error };
     }
   }
 }

@@ -1,15 +1,8 @@
 const gatewayService = require('../services/gateway.service');
 
-const { Gateway } = require('../models');
 const { isValidIp, validSerial } = require('../utils/utils');
-// TODO: extract to constants variable
-const {
-  DB_ERROR_CODES,
-  DB_UPDATE_STATUS,
-  DB_DELETE_STATUS,
-} = require('../utils/constants');
 
-async function getAll(req, res) {
+async function getAll(_, res) {
   try {
     const allGateways = await gatewayService.getAll();
 
@@ -34,7 +27,7 @@ async function getBySerial(req, res) {
     res.send({ serial: 'fail', message: 'Invalid serial number' });
   }
 }
-var a;
+
 async function addOne(req, res) {
   const gatewayData = req.body;
   const { ip, devices } = gatewayData;
@@ -63,6 +56,15 @@ async function addOne(req, res) {
 async function updateOne(req, res) {
   const serial = validSerial(req.params);
   const update = req.body;
+
+  const isValidDevices = req.body.devices;
+
+  if (isValidDevices && isValidDevices.length > 10) {
+    return res.send(400).send({
+      devices: 'fail',
+      message: 'A gateway can only have less than 10 or less devices!',
+    });
+  }
 
   if (serial) {
     try {
