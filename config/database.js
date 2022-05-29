@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const config = require('config');
+const dbConfig = require('./dbConfig.json');
 
 mongoose.Promise = Promise;
-mongoose.connect(`mongodb:\/\/localhost:27017/${config.dbName}`);
+mongoose.connect(
+  `mongodb:\/\/${dbConfig.host}:${dbConfig.port}/${config.dbName}`
+);
 
 mongoose.connection.on('connected', () => {
   console.log(
